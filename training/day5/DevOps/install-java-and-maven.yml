@@ -1,0 +1,17 @@
+---
+
+- name: installs jdk and maven build Tools
+  become: yes
+  hosts: all
+  tasks:
+          - name : Apt install java 
+            apt:
+                    name: openjdk-8-jre-headless
+                    state: latest
+                    update_cache: yes
+          - name : Apt install maven
+            apt:
+                    name: maven
+                    state: latest
+                    update_cache: yes
+

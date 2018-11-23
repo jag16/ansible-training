@@ -1,0 +1,9 @@
+- name: Build Jenkins Slave Docker image from DockerFile
+  hosts: localhost
+  tasks:
+          - name: Build a Jenkins slave docker image
+            docker_image:
+                    name: "verizon/ubuntu-jenkins-slave"
+                    path: "."
+                    state: present
+                    dockerfile: Dockerfile
