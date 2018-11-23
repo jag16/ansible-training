@@ -1,0 +1,9 @@
+- name: Demo to Build Docker image from DockerFile
+  hosts: localhost
+  tasks:
+          - name: Build a docker image
+            docker_image:
+                    name: "verizon/ansuble-ubuntu"
+                    path: "."
+                    state: present
+                    dockerfile: UbuntuDockerfile

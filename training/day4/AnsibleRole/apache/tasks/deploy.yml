@@ -1,0 +1,6 @@
+---
+- name: Deploy Webpage on apache
+  template: src=index.html.j2 dest=/var/html/index.html
+
+
+...

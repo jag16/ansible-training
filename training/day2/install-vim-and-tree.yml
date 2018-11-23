@@ -1,0 +1,19 @@
+- name: Demonstrates Install softwares via playboot
+  hosts: all
+  become: yes
+
+  tasks: 
+  - name: Install vim
+    apt: name=vim state=latest update_cache=yes
+# state = absent, present, latest
+  
+  - name: Install tree utility
+    apt: name=tree state=latest update_cache=yes
+
+  - name: Check tree utulity
+    shell: tree /
+    register: output
+
+  - name: Print the tree output
+    debug: var=output
+

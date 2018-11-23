@@ -1,0 +1,16 @@
+- name: Demonstrates Install softwares via playboot
+  hosts: all
+  become: yes
+  #vars_files:
+  #        - /root/training/day2/softwares-list
+
+  tasks: 
+  - name: Install vim
+    apt: name={{item}} state=latest update_cache=yes
+    with_items: cat "/root/training/day2/softwares-list"
+# state = absent, present, latest
+  
+  - name: Check tree utulity
+    shell: tree /
+    register: output
+

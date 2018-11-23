@@ -1,0 +1,14 @@
+- name: Demo Dictionary
+  hosts: all
+  vars:
+          - contacts:
+                  Ram:
+                          name: Raman
+                          mobile: 123-456-7890
+                  Sita:
+                          name: Sita
+                          mobile: 123-098-4567
+  tasks:
+          - name: Print the contact details
+            debug: msg="{{item.value.name}} --> {{item.value.mobile}}"
+            with_dict: "{{contacts}}"  

@@ -1,0 +1,6 @@
+- name : Demonstrates use of ping  module
+  hosts: all
+  gather_facts: no
+  tasks:
+          - name: Ping the container
+            ping:

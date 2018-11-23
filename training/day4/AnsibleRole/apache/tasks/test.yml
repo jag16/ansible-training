@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - apache
+  tasks:
+          - name: Install curl in Ubuntu
+            apt: name=curl state=latest update_cache=yes
+            when: ansible_osdistribution=="Ubuntu"
+
+          - name: Install curl on CentOS
+            yum: name=curl state=latest
+            when: ansible_osdistribution=="CentOS"
+          
+          - name: Test apache running
+            command: "curl localhost:800{{item}}"
+            with_sequence: start=1 end=9
+
+...

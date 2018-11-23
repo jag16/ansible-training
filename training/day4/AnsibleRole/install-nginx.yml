@@ -1,0 +1,76 @@
+- name: Install nginx and deploy webpage
+  hosts: all
+  vars:
+          - config_changed: False
+  vars_files:
+          - nginx_vars_file
+  tasks:
+          - name: Install Nginx
+            apt: name=nginx state=latest update_cache=yes
+            when: ( ansible_distribution == 'Ubuntu' and ansible_os_family == 'Debian' )
+
+          - name: Configure Nginx
+            when: ( ansible_distribution == 'Ubuntu' and ansible_os_family == 'Debian' )
+            copy: src=default dest=/etc/nginx/sites-available/default backup=yes
+
+          - name: Install Nginx
+            yum: name=epel-release state=latest update_cache=yes
+            when: ( ansible_distribution == 'CentOS' and ansible_os_family == 'RedHat' )
+          - name: Install Nginx
+            yum: name=nginx.x86_64 state=latest update_cache=yes
+            when: ( ansible_distribution == 'CentOS' and ansible_os_family == 'RedHat' )
+            notify:
+                    - restart nginx
+            register: response
+
+          
+          - name: Configure Nginx
+            when: ( ansible_distribution == 'CentOS' and ansible_os_family == 'RedHat' )
+            copy: src=default dest=/etc/nginx/conf.d/default.conf backup=yes
+            register: response
+            notify:
+                    - restart nginx2
+
+          - name: Create docroot
+            file: path=/var/html state=directory mode=0777
+
+
+            #          - name: restart nginx
+            #            command: sysctl restart nginx
+            #command: /etc/init.d/nginx restart
+            #when: ( ansible_distribution == 'CentOS' and ansible_os_family == 'RedHat' )
+          
+          - name: Deploy webpage
+            template: src=index.html.j2 dest=/var/html/index.html
+
+          - name: Define Custom facts
+            set_fact: 
+               config_changed : "{{True if response.changed == True else False}}"
+
+          - debug: msg="Config Changes detected"
+            when: config_changed == True
+
+          - debug: msg="No Config Changes detected"
+            when: config_changed == False
+
+            #          - debug: var=config_changed
+
+  handlers: 
+          - name: restart nginx
+            command: service nginx restart
+          - name: restart nginx2
+            command: service nginx restart
+
+- name: Test nginx is running or not
+  hosts: localhost
+  tasks:
+          
+          - name: install curl
+            apt: name=curl state=latest
+          
+          - name: access webpage
+            shell: "curl http://localhost:800{{item}}"
+            with_sequence: start=1 end=9
+
+          
+

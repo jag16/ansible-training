@@ -1,0 +1,31 @@
+- name: Install configure and deploy web page
+  hosts: all
+  become: yes
+  vars:
+          - greeting_message: DevOps
+          - cm_tool: Ansible
+          - provisioner_tool: Docker
+
+  tasks:
+          - name: Install nginx web server
+            apt: name=nginx state=latest update_cache=no
+
+          - name: COnfigure nginx webserver
+            copy: src=default dest=/etc/nginx/sites-available/default backup=yes
+
+          - name: Create document root directory
+            file: path=/var/html state=directory mode=0777
+
+          - name: Deploy index.html in docRoot
+            template: src=index.html.j2 dest=/var/html/index.html
+
+          - name: Restart nginx
+            #            service: name=nginx state=restarted
+            command: service nginx restart
+
+- name: Check if nginx is running
+  hosts: localhost
+  tasks:
+          - name: Access webpage
+            shell: "curl http://localhost:{{item}}"
+            with_sequence: start=8001 end=8004

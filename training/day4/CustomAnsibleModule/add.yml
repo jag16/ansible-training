@@ -1,0 +1,10 @@
+---
+
+- name: Demonstrates invoking custome ansible module
+  hosts: all
+  gather_facts: false
+  tasks:
+          - name: Invoke custom module
+            add: p=10 q=12
+            register: output
+          - debug: var=output
